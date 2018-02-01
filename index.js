@@ -7,6 +7,7 @@ var fs = require('fs');
 var parse = require('dockerfile-parse');
 var exeq = require('exeq');
 var getos = require('getos');
+var debug = false;
 
 var dockerFile = fs.readFileSync(__dirname + '/Dockerfile', 'utf8');
 if (!dockerFile||dockerFile == undefined) {
@@ -15,13 +16,13 @@ if (!dockerFile||dockerFile == undefined) {
 }
 var docker = parse(dockerFile);
 
-console.dir(docker);
+if (debug) console.dir(docker);
 
 getos(function(e,os) {
   if(e) { console.log(e); process.exit(1); }
   console.log("Your OS is:",os.dist);
-  if (dockerfile.from.toLowerCase().indexOf( osName(os.dist.toLowerCase()) ) == -1) {
-    console.log('OS Mismatch!',dockerfile.from);
+  if (docker.from.toLowerCase().indexOf( os.dist.toLowerCase() ) == -1) {
+    console.log('OS Mismatch!',docker.from);
     process.exit(1);
   }
 })
@@ -30,13 +31,22 @@ var install =
  exeq(docker.run[0])
    .then(function(results) {
      if (debug) console.log(results);
-     console.log('Dockerfile Executed!');
-     exeq(docker.entrypoint)
+     if (debug) console.log('Dockerfile Executed!');
+     if (docker.entrypoint) {
+      exeq(docker.entrypoint)
 	.then(function(results) {
-	  console.log('Entrypoint Executed!');
+	  if (debug) console.log('Entrypoint Executed!',results);
 	}).catch(function(err) {
 	  console.log(err);
-	});
+      });
+     } else if (docker.cmd) {
+      exeq(docker.cmd)
+	.then(function(results) {
+	  if (debug) console.log('CMD Executed!',results);
+	}).catch(function(err) {
+	  console.log(err);
+      });
+     }
   }).catch(function(err) {
     console.log(err);
   });

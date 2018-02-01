@@ -4,11 +4,11 @@ Brutal execution of Dockerfile + Entrypoint commands on a real system, for fun a
 
 ### Install
 ```
-sudo npm install -g dockerbash
+sudo npm install -g undocker
 ```
 
 ### Usage
 ```
-cd my-docker-dir && dockerbash
+cd my-docker-dir && undocker
 ```
 

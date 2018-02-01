@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:8.9
 
 # NOT A REAL DOCKERFILE!
 

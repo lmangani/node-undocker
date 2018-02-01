@@ -9,25 +9,20 @@ var exeq = require('exeq');
 var getos = require('getos');
 var debug = false;
 
+var doExit = function(msg){
+    console.log(msg);
+    process.exit(1);
+}
+
 var dockerFile = fs.readFileSync(__dirname + '/Dockerfile', 'utf8');
 if (!dockerFile||dockerFile == undefined) {
-        console.log('Missing Dockerfile');
-	process.exit(1);
+        doExit('Missing Dockerfile');
 }
 var docker = parse(dockerFile);
-
 if (debug) console.dir(docker);
+var from = docker.from.split(':');
 
-getos(function(e,os) {
-  if(e) { console.log(e); process.exit(1); }
-  console.log("Your OS is:",os.dist);
-  if (docker.from.toLowerCase().indexOf( os.dist.toLowerCase() ) == -1) {
-    console.log('OS Mismatch!',docker.from);
-    process.exit(1);
-  }
-})
-
-var install =
+var install = function() {
  exeq(docker.run[0])
    .then(function(results) {
      if (debug) console.log(results);
@@ -50,5 +45,16 @@ var install =
   }).catch(function(err) {
     console.log(err);
   });
+}
 
-
+getos(function(e,os) {
+  if(e) { console.log(e); process.exit(1); }
+  console.log("Your OS is:",os.dist, os.release);
+  if (from[0].toLowerCase().indexOf( os.dist.toLowerCase() ) == -1) {
+	doExit('OS Mismatch! '+os.dist);
+  }
+  if ( (from[1] && os.release) && from[1].toString() != os.release ) {
+	doExit('OS Release Mismatch! '+os.release);
+  }
+  install()
+});

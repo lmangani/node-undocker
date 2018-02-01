@@ -3,14 +3,24 @@
  *
  */
 
-var fs = require('fs')
-var parse = require('dockerfile-parse')
+var fs = require('fs');
+var parse = require('dockerfile-parse');
 var exeq = require('exeq');
+var getos = require('getos');
 
-var dockerFile = fs.readFileSync(__dirname + '/Dockerfile', 'utf8')
-var docker = parse(dockerFile)
- 
-console.dir(docker)
+var dockerFile = fs.readFileSync(__dirname + '/Dockerfile', 'utf8');
+var docker = parse(dockerFile);
+
+console.dir(docker);
+
+getos(function(e,os) {
+  if(e) { console.log(e); process.exit(1); }
+  console.log("Your OS is:",os.dist);
+  if (dockerfile.from.toLowerCase().indexOf( osName(os.dist.toLowerCase()) ) == -1) {
+    console.log('OS Mismatch!',dockerfile.from,);
+    process.exit(1);
+  }
+})
 
 var install =
  exeq(docker.run[0])

@@ -4,7 +4,7 @@
   "description": "Install Dockerfiles on a real systems",
   "main": "index.js",
   "bin": {
-	"undocker": "index.js"
+    "undocker": "index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "dockerfile-parse": "^0.2.0",
-    "exeq": "^3.0.0"
+    "exeq": "^3.0.0",
+    "getos": "^3.1.0"
   }
 }

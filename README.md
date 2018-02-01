@@ -1,5 +1,6 @@
-# dockerBash
-Brutal execution of Dockerfile + Entrypoint on a real system, for fun a profit (and damage)
+# unDocker
+
+Brutal execution of Dockerfile + Entrypoint commands on a real system, for fun a profit (and damage)
 
 ### Install
 ```
